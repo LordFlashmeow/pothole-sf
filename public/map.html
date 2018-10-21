@@ -1,59 +1,81 @@
+<!DOCTYPE html>
+<html>
+
 <head>
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1533195059" />
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-clustering.js" type="text/javascript" charset="utf-8"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
     <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
-    <link rel="stylesheet" href="src/css/style.css">
+
+    <script src="src/js/combustion.js"></script>
 
 </head>
 
 <body>
-    <script>
-        // Initialize Firebase
-        var config = {
-            apiKey: "AIzaSyDxE9wqGVNr3IUrDQyDK1qtG0C0sB0YqKQ",
-            authDomain: "potholes-sf.firebaseapp.com",
-            databaseURL: "https://potholes-sf.firebaseio.com",
-            projectId: "potholes-sf",
-            storageBucket: "potholes-sf.appspot.com",
-            messagingSenderId: "277599364088"
-        };
-        firebase.initializeApp(config);
-        const db = firebase.firestore();
+    <h1 style="text-align: center">Reported Potholes:</h1>
+    <div id="map" style="width: 75%; height: 45em; margin: auto; background: grey"></div>
+    <script type="text/javascript" charset="UTF-8">
+        /**
+         * Boilerplate map initialization code starts below:
+         */
 
-        const settings = {
-            timestampsInSnapshots: true
-        };
+        //Step 1: initialize communication with the platform
+        var platform = new H.service.Platform({
+            app_id: 'uYwZcoW86WysYWbzjZYu',
+            app_code: 'mjgCrb6DfK2JI-Ti7hg4Ng',
+            useHTTPS: true
+        });
+        var pixelRatio = window.devicePixelRatio || 1;
+        var defaultLayers = platform.createDefaultLayers({
+            tileSize: pixelRatio === 1 ? 256 : 512,
+            ppi: pixelRatio === 1 ? undefined : 320
+        });
 
-        db.settings(settings);
+        //Step 2: initialize a map - this map is centered over Boston
+        var map = new H.Map(document.getElementById('map'),
+            defaultLayers.normal.map, {
+                center: {
+                    lat: 37.7749,
+                    lng: -122.4194
+                },
+                zoom: 10,
+                pixelRatio: pixelRatio
+            });
+
+        //Step 3: make the map interactive
+        // MapEvents enables the event system
+        // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+        var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+        // Step 4: Create the default UI:
+        var ui = H.ui.UI.createDefault(map, defaultLayers, 'en-US');
+
+        // Add markers
+        var dataPoints = [];
+
+        var latLongArrayPromise = getLatLongArray()
+        latLongArrayPromise.then(function (latLongArray) {
+            console.log(latLongArray.length);
+            for (var index = 0; index < latLongArray.length; index++) {
+                dataPoints.push(new H.clustering.DataPoint(latLongArray[index][0], latLongArray[index][1]));
+            }
+
+            var clusteredDataProvider = new H.clustering.Provider(dataPoints);
+
+            // Create a layer that includes the data provider and its data points: 
+            var layer = new H.map.layer.ObjectLayer(clusteredDataProvider);
+
+            // Add the layer to the map:
+            map.addLayer(layer);
+        });
     </script>
-    
-
-    <div id="map"></div>
-
-    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-    </script>
-    
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_mZGqHru83hQ7_ztt1Fdecza9L_BW_5Q">
-    </script>
-
-    <script src='src/js/mapping.js'></script>
-
-    <script>
-        async function initMap() {
-            var locations = await getLatLongArray();
-            console.log(locations);
-            // var locations = dummyarray();
-            console.log(locations);
-
-            // console.log(locations);
-
-
-        }
-
-
-        // var locations = [{lat: -33.718234, lng: 150.363181}];
-    </script>
-
-    
-
 </body>
 
 </html>

@@ -19,10 +19,10 @@ db.collection("TestPotholeLocations").get().then((snapshot) => {
 
 
 var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 3,
+    zoom: 11,
     center: {
-        lat: 0,
-        lng: 0
+        lat: 37.7749,
+        lng: -122.4194
     }
 });
 
