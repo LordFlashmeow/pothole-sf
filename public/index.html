@@ -1,5 +1,7 @@
 <head>
     <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
 </head>
 
 <body onload="getLocationUpdate()">
@@ -24,10 +26,10 @@
     </script>
     <script src='src/js/accelerometer.js'></script>
 
-    <div>
-        Potholes counted: <span id=potholeCounter></span>
+    <div style="margin: 1em">
+        <h1>Potholes counted: <span id=potholeCounter></span></h1>
     </div>
-    <div>
+    <div style="margin: 1em">
         <a href="map.html">View reported potholes</a>
     </div>
 
