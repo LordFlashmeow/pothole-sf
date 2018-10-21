@@ -26,4 +26,3 @@ async function getLatLongArray() {
     return array;
 }
 var latLongArray = getLatLongArray()
-console.log(latLongArray);

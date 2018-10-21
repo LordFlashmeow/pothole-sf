@@ -62,7 +62,6 @@
 
         var latLongArrayPromise = getLatLongArray()
         latLongArrayPromise.then(function (latLongArray) {
-            console.log(latLongArray.length);
             for (var index = 0; index < latLongArray.length; index++) {
                 dataPoints.push(new H.clustering.DataPoint(latLongArray[index][0], latLongArray[index][1]));
             }

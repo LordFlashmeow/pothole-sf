@@ -19,7 +19,6 @@ var oldLatitude
 var oldLongitude
 
 function getLocation() {
-    console.log(oldLatitude + ", " + oldLongitude);
     return [oldLatitude, oldLongitude];
 }
 
@@ -62,19 +61,15 @@ if (window.DeviceMotionEvent != undefined) {
 	window.ondevicemotion = function(e) {
         var newZ = Math.abs(e.accelerationIncludingGravity.z);
 		if ((newZ - oldZ) > 7) {
-            console.log(newZ);
             console.log(getLocation());
 
             // Only report every 10 seconds
             currentTime = new Date().getTime()
             if ((currentTime - lastPotholeTime) > 10000){
-                console.log("current time", new Date().getTime(), "old time", lastPotholeTime)
                 addLatLong(getLocation());
                 potholeCounter ++;
                 document.getElementById("potholeCounter").innerHTML = potholeCounter;
                 lastPotholeTime = new Date().getTime();
-                
-
             }
             
 		}
